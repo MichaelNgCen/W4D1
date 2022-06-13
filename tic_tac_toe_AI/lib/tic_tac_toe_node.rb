@@ -9,33 +9,26 @@ class TicTacToeNode
   end
 
   def find_next_mover_mark
-    if self.next_mover_mark == :x  
-      return :o
-    else
-      return :x
-    end
+    self.next_mover_mark == :x  ? :o : :x
   end
 
   def losing_node?(evaluator)
     return false if board.tied?
-    if board.over? 
-      return board.winner != evaluator 
-    end
-    if next_mover_mark == evaluator # this means it is opponent's turn 
+    return board.winner != evaluator if board.over? 
+
+    if self.next_mover_mark == evaluator # this means it is opponent's turn 
       return self.children.all? {|child| child.losing_node?(evaluator)}
-    else # it is our turn 
+    else 
       return self.children.any? {|child| child.losing_node?(evaluator)}
     end
   end
 
   def winning_node?(evaluator)
-    if board.over? 
-      return board.winner == evaluator
-    end
-    if mark = evaluator 
-      self.children.any? {|child| child.winning_node?(evaluator)}
+    return board.winner == evaluator if board.over? 
+    if self.next_mover_mark == evaluator 
+      return self.children.any? {|child| child.winning_node?(evaluator)} 
     else
-      self.children.all? {|child|child.winning_node?(evaluator)}
+      return self.children.all? {|child|child.winning_node?(evaluator)}
     end
   end
 
@@ -43,9 +36,11 @@ class TicTacToeNode
   # the current move.
   def children
     moves = []
+
     (0..2).each do |row|
       (0..2).each do |col|
         pos = [row, col]
+
         if board.empty?(pos)
           new_board = board.dup
           new_board[pos] = self.next_mover_mark

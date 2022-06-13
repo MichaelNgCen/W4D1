@@ -3,7 +3,6 @@ require 'byebug'
 
 class SuperComputerPlayer < ComputerPlayer
   def move(game, mark)
-    debugger
     node = TicTacToeNode.new(game.board, mark)
 
     node.children.each do |child| 
